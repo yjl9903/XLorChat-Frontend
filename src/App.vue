@@ -1,28 +1,49 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <router-view name="home"/>
+    <navbar v-if="$route.path !== '/'" background />
+    <div class="content"></div>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import PubSub from 'pubsub-js';
+
+import navbar from '@/components/navbar.vue';
+import User from './services/users';
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    navbar
+  },
+  data: () => ({
+    user: null
+  }),
+  async created() {
+    // PubSub.subscribe('login', (msg, data) => { console.log(data); this.user = data });
+    try {
+      this.user = await User.updateUser();
+    } catch(err) {
+      this.user = null;
+    } finally {
+      PubSub.publish('showNavbar');
+    }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+#app, body, html {
+  height: 100%;
+}
+
+.fullheight {
+  height: 100%;
+}
+
+.fullwidth {
+  width: 100%;
 }
 </style>
