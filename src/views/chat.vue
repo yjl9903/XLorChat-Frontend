@@ -112,4 +112,10 @@ export default {
     padding: 0 12px;
   }
 }
+
+@media screen and (min-width: 1024px) {
+  #chat {
+    height: calc(100% - 70px) !important;
+  }
+}
 </style>
