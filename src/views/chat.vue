@@ -27,6 +27,7 @@
           :messages.sync="allmsg[selected]"
           :name="selected === -1 ? '' : getGroupName(userGroup[selected])"
         />
+        <div v-else class="card fullheight"></div>
       </div>
     </div>
   </div>
