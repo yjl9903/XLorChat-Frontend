@@ -4,31 +4,42 @@
       <div class="column is-3">
         <b-menu v-if="user">
           <b-menu-list label="会话">
-            <b-menu-item v-for="(g, id) in userGroup" 
-              :key="id" :active="id === 0"
+            <b-menu-item
+              v-for="(g, id) in userGroup"
+              :key="id"
+              :active="id === 0"
               :label="getGroupName(g)"
-              @click="connect(g, id)"></b-menu-item>
+              @click="
+                connect(
+                  g,
+                  id
+                )
+              "
+            ></b-menu-item>
           </b-menu-list>
         </b-menu>
       </div>
       <div class="column is-9 fullheight">
-        <chat-card v-if="selected !== -1" ref="card"
+        <chat-card
+          v-if="selected !== -1"
+          ref="card"
           :user="user"
           :messages.sync="allmsg[selected]"
-          :name="selected === -1 ? '' : getGroupName(userGroup[selected])" />
+          :name="selected === -1 ? '' : getGroupName(userGroup[selected])"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import ChatCard from '@/components/chatcard.vue';
-import PubSub from 'pubsub-js';
-import User from '../services/users';
-import { wsURL } from '../config';
+import ChatCard from "@/components/chatcard.vue";
+import PubSub from "pubsub-js";
+import User from "../services/users";
+import { wsURL } from "../config";
 
 export default {
-  name: 'chat',
+  name: "chat",
   components: {
     ChatCard
   },
@@ -57,10 +68,10 @@ export default {
         if (this.user.uid === user.uid) continue;
         s.push(user.name);
       }
-      return s.join(', ');
+      return s.join(", ");
     },
     async connect(group, id) {
-      if (this.selected === id) return ;
+      if (this.selected === id) return;
       this.selected = id;
       if (this.allws[id] === null) {
         this.allws[id] = new WebSocket(wsURL + String(group.gid));
@@ -76,12 +87,12 @@ export default {
       this.user = user;
       this.init();
     }
-    PubSub.subscribe('login', (msg, data) => {
+    PubSub.subscribe("login", (msg, data) => {
       this.user = data;
       this.init();
     });
   }
-}
+};
 </script>
 
 <style>
@@ -91,7 +102,7 @@ export default {
 
 @media screen and (max-width: 1023px) {
   #chat {
-    padding: 0 12px; 
+    padding: 0 12px;
   }
 }
 </style>

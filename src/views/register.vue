@@ -12,10 +12,18 @@
               <b-input v-model="username"></b-input>
             </b-field>
             <b-field label="密码">
-              <b-input v-model="password" type="password" password-reveal></b-input>
+              <b-input
+                v-model="password"
+                type="password"
+                password-reveal
+              ></b-input>
             </b-field>
             <b-field label="确认密码">
-              <b-input v-model="password2" type="password" password-reveal></b-input>
+              <b-input
+                v-model="password2"
+                type="password"
+                password-reveal
+              ></b-input>
             </b-field>
             <b-field label="昵称">
               <b-input v-model="name"></b-input>
@@ -24,7 +32,9 @@
               <b-input v-model="email"></b-input>
             </b-field>
             <div class="buttons">
-              <b-button expanded type="is-success" @click="register">注册</b-button>
+              <b-button expanded type="is-success" @click="register"
+                >注册</b-button
+              >
             </div>
           </div>
         </div>
@@ -35,19 +45,18 @@
 
 <script>
 export default {
-  name: 'register',
+  name: "register",
   data: () => ({
-    username: '', password: '', password2: '',
-    name: '', email: ''
+    username: "",
+    password: "",
+    password2: "",
+    name: "",
+    email: ""
   }),
   methods: {
-    register() {
-
-    }
+    register() {}
   }
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

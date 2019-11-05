@@ -15,22 +15,28 @@
       </b-navbar-item>
       <b-navbar-item v-else-if="background" class="buttons">
         <b-button tag="router-link" to="login">立即开始</b-button>
-        <b-button type="is-success" tag="router-link" to="register">注册</b-button>
+        <b-button type="is-success" tag="router-link" to="register"
+          >注册</b-button
+        >
       </b-navbar-item>
       <b-navbar-item v-else class="buttons">
-        <b-button type="is-light" outlined tag="router-link" to="login">立即开始</b-button>
-        <b-button type="is-light" outlined tag="router-link" to="register">注册</b-button>
+        <b-button type="is-light" outlined tag="router-link" to="login"
+          >立即开始</b-button
+        >
+        <b-button type="is-light" outlined tag="router-link" to="register"
+          >注册</b-button
+        >
       </b-navbar-item>
     </template>
   </b-navbar>
 </template>
 
 <script>
-import PubSub from 'pubsub-js';
-import User from '../services/users';
+import PubSub from "pubsub-js";
+import User from "../services/users";
 
 export default {
-  name: 'navbar',
+  name: "navbar",
   data: () => ({
     isEnd: false,
     isLogin: false
@@ -40,22 +46,20 @@ export default {
       this.isEnd = true;
       this.isLogin = true;
     }
-    PubSub.subscribe('showNavbar', () => this.isEnd = true);
-    PubSub.subscribe('login', () => this.isLogin = true);
-    PubSub.subscribe('logout', () => this.isLogin = false);
+    PubSub.subscribe("showNavbar", () => (this.isEnd = true));
+    PubSub.subscribe("login", () => (this.isLogin = true));
+    PubSub.subscribe("logout", () => (this.isLogin = false));
   },
   methods: {
     async logout() {
       await User.logout();
-      this.$router.push('/');
+      this.$router.push("/");
     }
   },
   props: {
     background: Boolean
   }
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

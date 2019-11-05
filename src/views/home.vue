@@ -9,8 +9,12 @@
           <h1 class="column is-full title">Enjoy Chatting</h1>
           <h2 class="column is-full subtitle">基于 WebSocket 的在线聊天室</h2>
           <div class="column is-full buttons">
-            <b-button type="is-light" outlined @click="start">立即开始</b-button>
-            <b-button type="is-light" outlined tag="router-link" to="register">注册</b-button>
+            <b-button type="is-light" outlined @click="start"
+              >立即开始</b-button
+            >
+            <b-button type="is-light" outlined tag="router-link" to="register"
+              >注册</b-button
+            >
           </div>
         </div>
       </div>
@@ -19,19 +23,19 @@
 </template>
 
 <script>
-import User from '../services/users';
-import navbar from '@/components/navbar.vue';
+import User from "../services/users";
+import navbar from "@/components/navbar.vue";
 
 export default {
-  name: 'home',
+  name: "home",
   components: {
     navbar
   },
   methods: {
     start() {
-      if (User.getUser()) this.$router.push('chat');
-      else this.$router.push('login');
+      if (User.getUser()) this.$router.push("chat");
+      else this.$router.push("login");
     }
   }
-}
+};
 </script>

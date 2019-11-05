@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view name="home"/>
+    <router-view name="home" />
     <navbar v-if="$route.path !== '/'" background />
     <div class="content"></div>
     <router-view></router-view>
@@ -8,13 +8,13 @@
 </template>
 
 <script>
-import PubSub from 'pubsub-js';
+import PubSub from "pubsub-js";
 
-import navbar from '@/components/navbar.vue';
-import User from './services/users';
+import navbar from "@/components/navbar.vue";
+import User from "./services/users";
 
 export default {
-  name: 'app',
+  name: "app",
   components: {
     navbar
   },
@@ -22,20 +22,21 @@ export default {
     user: null
   }),
   async created() {
-    // PubSub.subscribe('login', (msg, data) => { console.log(data); this.user = data });
     try {
       this.user = await User.updateUser();
-    } catch(err) {
+    } catch (err) {
       this.user = null;
     } finally {
-      PubSub.publish('showNavbar');
+      PubSub.publish("showNavbar");
     }
   }
-}
+};
 </script>
 
 <style>
-#app, body, html {
+#app,
+body,
+html {
   height: 100%;
 }
 

@@ -13,10 +13,17 @@
               <b-input v-model="username"></b-input>
             </b-field>
             <b-field label="密码">
-              <b-input @keyup.enter.native="login" v-model="password" type="password" password-reveal></b-input>
+              <b-input
+                @keyup.enter.native="login"
+                v-model="password"
+                type="password"
+                password-reveal
+              ></b-input>
             </b-field>
             <div class="buttons">
-              <b-button expanded type="is-success" @click="login">登录</b-button>
+              <b-button expanded type="is-success" @click="login"
+                >登录</b-button
+              >
             </div>
           </div>
         </div>
@@ -26,33 +33,32 @@
 </template>
 
 <script>
-import User from '../services/users';
+import User from "../services/users";
 
 export default {
-  name: 'chat-login',
+  name: "chat-login",
   data: () => ({
-    username: '', password: ''
+    username: "",
+    password: ""
   }),
   methods: {
     async login() {
       try {
         await User.login(this);
-        this.$router.push('/chat');
+        this.$router.push("/chat");
       } catch (err) {
         this.$buefy.snackbar.open({
           duration: 5000,
-          message: '登录失败',
-          type: 'is-danger',
-          position: 'is-top',
-          actionText: '关闭',
-          queue: false,
+          message: "登录失败",
+          type: "is-danger",
+          position: "is-top",
+          actionText: "关闭",
+          queue: false
         });
       }
     }
   }
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

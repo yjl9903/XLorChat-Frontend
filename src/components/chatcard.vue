@@ -3,11 +3,17 @@
     <header class="card-header" ref="header">
       <h1 class="card-header-title">{{ name }}</h1>
     </header>
-    
+
     <div class="card-content" :style="height" v-chat-scroll>
-      <p v-for="(item, id) in messages" :key="id"
-        :class="[item.user.uid === user.uid ? 'has-text-right' : 'has-text-left']"
-        >{{ item.message }}</p>
+      <p
+        v-for="(item, id) in messages"
+        :key="id"
+        :class="[
+          item.user.uid === user.uid ? 'has-text-right' : 'has-text-left'
+        ]"
+      >
+        {{ item.message }}
+      </p>
     </div>
 
     <footer class="card-footer" ref="footer">
@@ -15,12 +21,18 @@
         <div class="columns is-multiline fullwidth">
           <div class="column is-full">
             <b-field class="fullwidth">
-              <b-input type="textarea" ref="text" v-model="text"
-                @keyup.ctrl.enter.native="submit"></b-input>
+              <b-input
+                type="textarea"
+                ref="text"
+                v-model="text"
+                @keyup.ctrl.enter.native="submit"
+              ></b-input>
             </b-field>
           </div>
           <div class="column has-text-right" style="padding-top: 0">
-            <b-button size="is-small" type="is-success" @click="submit">发送</b-button>
+            <b-button size="is-small" type="is-success" @click="submit"
+              >发送</b-button
+            >
           </div>
         </div>
       </div>
@@ -30,20 +42,21 @@
 
 <script>
 export default {
-  name: 'chat-card',
+  name: "chat-card",
   props: {
-    name: String, 
+    name: String,
     user: Object,
     messages: Array
   },
   data: () => ({
     height: {
-      height: '0px',
-      overflowX: 'hidden',
-      overflowY: 'auto'
+      height: "0px",
+      overflowX: "hidden",
+      overflowY: "auto"
     },
-    text: '',
-    group: null, ws: null,
+    text: "",
+    group: null,
+    ws: null,
     openHandle: null,
     messageHandle: null,
     closeHandle: null
@@ -57,11 +70,11 @@ export default {
     },
     connect(group, ws) {
       this.calHeight();
-      
+
       if (this.ws) {
-        this.ws.removeEventListener('open', this.openHandle);
-        this.ws.removeEventListener('message', this.messageHandle);
-        this.ws.removeEventListener('close', this.closeHandle);
+        this.ws.removeEventListener("open", this.openHandle);
+        this.ws.removeEventListener("message", this.messageHandle);
+        this.ws.removeEventListener("close", this.closeHandle);
       }
 
       this.$refs.text.focus();
@@ -74,23 +87,26 @@ export default {
         this.messages.push(data);
       };
       this.closeHandle = () => {};
-      ws.addEventListener('open', this.openHandle);
-      ws.addEventListener('message', this.messageHandle);
-      ws.addEventListener('close', this.closeHandle);
+      ws.addEventListener("open", this.openHandle);
+      ws.addEventListener("message", this.messageHandle);
+      ws.addEventListener("close", this.closeHandle);
     },
     submit() {
-      if (!this.ws) return ;
+      if (!this.ws) return;
       this.ws.send(this.text);
-      this.text = '';
+      this.text = "";
       this.$refs.text.focus();
     }
   },
   mounted() {
-    window.addEventListener('resize', function() {
-      this.calHeight();
-    }.bind(this));
+    window.addEventListener(
+      "resize",
+      function() {
+        this.calHeight();
+      }.bind(this)
+    );
   }
-}
+};
 </script>
 
 <style>
