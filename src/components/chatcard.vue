@@ -42,7 +42,7 @@
 
 <script>
 export default {
-  name: "chat-card",
+  name: 'chat-card',
   props: {
     name: String,
     user: Object,
@@ -50,11 +50,11 @@ export default {
   },
   data: () => ({
     height: {
-      height: "0px",
-      overflowX: "hidden",
-      overflowY: "auto"
+      height: '0px',
+      overflowX: 'hidden',
+      overflowY: 'auto'
     },
-    text: "",
+    text: '',
     group: null,
     ws: null,
     openHandle: null,
@@ -72,9 +72,9 @@ export default {
       this.calHeight();
 
       if (this.ws) {
-        this.ws.removeEventListener("open", this.openHandle);
-        this.ws.removeEventListener("message", this.messageHandle);
-        this.ws.removeEventListener("close", this.closeHandle);
+        this.ws.removeEventListener('open', this.openHandle);
+        this.ws.removeEventListener('message', this.messageHandle);
+        this.ws.removeEventListener('close', this.closeHandle);
       }
 
       this.$refs.text.focus();
@@ -87,20 +87,20 @@ export default {
         this.messages.push(data);
       };
       this.closeHandle = () => {};
-      ws.addEventListener("open", this.openHandle);
-      ws.addEventListener("message", this.messageHandle);
-      ws.addEventListener("close", this.closeHandle);
+      ws.addEventListener('open', this.openHandle);
+      ws.addEventListener('message', this.messageHandle);
+      ws.addEventListener('close', this.closeHandle);
     },
     submit() {
       if (!this.ws) return;
       this.ws.send(this.text);
-      this.text = "";
+      this.text = '';
       this.$refs.text.focus();
     }
   },
   mounted() {
     window.addEventListener(
-      "resize",
+      'resize',
       function() {
         this.calHeight();
       }.bind(this)

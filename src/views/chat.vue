@@ -33,13 +33,13 @@
 </template>
 
 <script>
-import ChatCard from "@/components/chatcard.vue";
-import PubSub from "pubsub-js";
-import User from "../services/users";
-import { wsURL } from "../config";
+import ChatCard from '@/components/chatcard.vue';
+import PubSub from 'pubsub-js';
+import User from '../services/users';
+import { wsURL } from '../config';
 
 export default {
-  name: "chat",
+  name: 'chat',
   components: {
     ChatCard
   },
@@ -68,7 +68,7 @@ export default {
         if (this.user.uid === user.uid) continue;
         s.push(user.name);
       }
-      return s.join(", ");
+      return s.join(', ');
     },
     async connect(group, id) {
       if (this.selected === id) return;
@@ -87,7 +87,7 @@ export default {
       this.user = user;
       this.init();
     }
-    PubSub.subscribe("login", (msg, data) => {
+    PubSub.subscribe('login', (msg, data) => {
       this.user = data;
       this.init();
     });

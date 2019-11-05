@@ -32,11 +32,11 @@
 </template>
 
 <script>
-import PubSub from "pubsub-js";
-import User from "../services/users";
+import PubSub from 'pubsub-js';
+import User from '../services/users';
 
 export default {
-  name: "navbar",
+  name: 'navbar',
   data: () => ({
     isEnd: false,
     isLogin: false
@@ -46,14 +46,20 @@ export default {
       this.isEnd = true;
       this.isLogin = true;
     }
-    PubSub.subscribe("showNavbar", () => (this.isEnd = true));
-    PubSub.subscribe("login", () => (this.isEnd = true, this.isLogin = true));
-    PubSub.subscribe("logout", () => (this.isEnd = true, this.isLogin = false));
+    PubSub.subscribe('showNavbar', () => (this.isEnd = true));
+    PubSub.subscribe(
+      'login',
+      () => ((this.isEnd = true), (this.isLogin = true))
+    );
+    PubSub.subscribe(
+      'logout',
+      () => ((this.isEnd = true), (this.isLogin = false))
+    );
   },
   methods: {
     async logout() {
       await User.logout();
-      this.$router.push("/");
+      this.$router.push('/');
     },
     start() {
       if (this.isLogin) {

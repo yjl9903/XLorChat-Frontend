@@ -8,13 +8,13 @@
 </template>
 
 <script>
-import PubSub from "pubsub-js";
+import PubSub from 'pubsub-js';
 
-import navbar from "@/components/navbar.vue";
-import User from "./services/users";
+import navbar from '@/components/navbar.vue';
+import User from './services/users';
 
 export default {
-  name: "app",
+  name: 'app',
   components: {
     navbar
   },
@@ -27,7 +27,7 @@ export default {
     } catch (err) {
       this.user = null;
     } finally {
-      PubSub.publish("showNavbar");
+      PubSub.publish('showNavbar');
     }
   }
 };

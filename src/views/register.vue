@@ -45,13 +45,13 @@
 
 <script>
 export default {
-  name: "register",
+  name: 'register',
   data: () => ({
-    username: "",
-    password: "",
-    password2: "",
-    name: "",
-    email: ""
+    username: '',
+    password: '',
+    password2: '',
+    name: '',
+    email: ''
   }),
   methods: {
     register() {}
