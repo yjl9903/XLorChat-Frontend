@@ -15,7 +15,8 @@
         <div class="columns is-multiline fullwidth">
           <div class="column is-full">
             <b-field class="fullwidth">
-              <b-input type="textarea" ref="text" v-model="text"></b-input>
+              <b-input type="textarea" ref="text" v-model="text"
+                @keyup.ctrl.enter.native="submit"></b-input>
             </b-field>
           </div>
           <div class="column has-text-right" style="padding-top: 0">
@@ -31,7 +32,9 @@
 export default {
   name: 'chat-card',
   props: {
-    name: String, user: Object
+    name: String, 
+    user: Object,
+    messages: Array
   },
   data: () => ({
     height: {
@@ -39,9 +42,11 @@ export default {
       overflowX: 'hidden',
       overflowY: 'auto'
     },
-    messages: [],
     text: '',
-    group: null, ws: null
+    group: null, ws: null,
+    openHandle: null,
+    messageHandle: null,
+    closeHandle: null
   }),
   methods: {
     calHeight() {
@@ -51,16 +56,27 @@ export default {
       this.height.height = `${aH - hH - fH}px`;
     },
     connect(group, ws) {
-      this.$refs.text.focus();
       this.calHeight();
+      
+      if (this.ws) {
+        this.ws.removeEventListener('open', this.openHandle);
+        this.ws.removeEventListener('message', this.messageHandle);
+        this.ws.removeEventListener('close', this.closeHandle);
+      }
+
+      this.$refs.text.focus();
       this.group = group;
       this.ws = ws;
-      ws.addEventListener('open', () => {});
-      ws.addEventListener('message', ({ data }) => {
+
+      this.openHandle = () => {};
+      this.messageHandle = ({ data }) => {
         data = JSON.parse(data);
         this.messages.push(data);
-      });
-      ws.addEventListener('close', () => {});
+      };
+      this.closeHandle = () => {};
+      ws.addEventListener('open', this.openHandle);
+      ws.addEventListener('message', this.messageHandle);
+      ws.addEventListener('close', this.closeHandle);
     },
     submit() {
       if (!this.ws) return ;

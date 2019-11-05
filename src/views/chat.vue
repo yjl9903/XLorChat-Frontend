@@ -14,6 +14,7 @@
       <div class="column is-9 fullheight">
         <chat-card v-if="selected !== -1" ref="card"
           :user="user"
+          :messages.sync="allmsg[selected]"
           :name="selected === -1 ? '' : getGroupName(userGroup[selected])" />
       </div>
     </div>
@@ -66,7 +67,7 @@ export default {
       }
       this.$nextTick(() => {
         this.$refs.card.connect(group, this.allws[id]);
-      })
+      });
     }
   },
   created() {
