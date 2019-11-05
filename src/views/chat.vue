@@ -91,6 +91,13 @@ export default {
       this.user = data;
       this.init();
     });
+  },
+  beforeRouteEnter(to, from, next) {
+    if (User.getUser()) {
+      next();
+    } else {
+      next('/');
+    }
   }
 };
 </script>
