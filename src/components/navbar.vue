@@ -1,7 +1,7 @@
 <template>
   <b-navbar wrapper-class="container" transparent :shadow="!!background">
     <template slot="brand">
-      <b-navbar-item tag="router-link" :to="{ path: '/' }">
+      <b-navbar-item @click="start">
         <p class="title">Chat</p>
       </b-navbar-item>
     </template>
@@ -47,13 +47,24 @@ export default {
       this.isLogin = true;
     }
     PubSub.subscribe("showNavbar", () => (this.isEnd = true));
-    PubSub.subscribe("login", () => (this.isLogin = true));
-    PubSub.subscribe("logout", () => (this.isLogin = false));
+    PubSub.subscribe("login", () => (this.isEnd = true, this.isLogin = true));
+    PubSub.subscribe("logout", () => (this.isEnd = true, this.isLogin = false));
   },
   methods: {
     async logout() {
       await User.logout();
       this.$router.push("/");
+    },
+    start() {
+      if (this.isLogin) {
+        if (this.$route.path !== '/chat') {
+          this.$router.push('/chat');
+        }
+      } else {
+        if (this.$route.path !== '/') {
+          this.$router.push('/');
+        }
+      }
     }
   },
   props: {
