@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import User from '../services/users';
+
 export default {
   name: 'register',
   data: () => ({
@@ -54,7 +56,21 @@ export default {
     email: ''
   }),
   methods: {
-    register() {}
+    async register() {
+      try {
+        await User.register(this);
+        this.$router.push('/chat');
+      } catch (err) {
+        this.$buefy.snackbar.open({
+          duration: 5000,
+          message: '注册失败',
+          type: 'is-danger',
+          position: 'is-top',
+          actionText: '关闭',
+          queue: false
+        });
+      }
+    }
   }
 };
 </script>
