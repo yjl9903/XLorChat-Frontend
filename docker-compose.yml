@@ -1,0 +1,10 @@
+version: '2.1'
+
+services:
+  xlorchat:
+    build: .
+    container_name: xlorchat
+    ports:
+      - 80:80
+    volumes:
+      - ./dist:/xlorchat
