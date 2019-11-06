@@ -5,15 +5,12 @@
     </header>
 
     <div class="card-content" :style="height" v-chat-scroll>
-      <p
+      <bubble
         v-for="(item, id) in messages"
         :key="id"
-        :class="[
-          item.user.uid === user.uid ? 'has-text-right' : 'has-text-left'
-        ]"
-      >
-        {{ item.message }}
-      </p>
+        :message="item"
+        :self="item.user.uid === user.uid"
+      ></bubble>
     </div>
 
     <footer class="card-footer" ref="footer">
@@ -41,8 +38,13 @@
 </template>
 
 <script>
+import bubble from './bubble';
+
 export default {
   name: 'chat-card',
+  components: {
+    bubble
+  },
   props: {
     name: String,
     user: Object,
@@ -93,6 +95,7 @@ export default {
     },
     submit() {
       if (!this.ws) return;
+      if (this.text.length === 0) return ;
       this.ws.send(this.text);
       this.text = '';
       this.$refs.text.focus();
@@ -114,12 +117,12 @@ textarea {
   resize: none !important;
 }
 
-pre::-webkit-scrollbar {
-  width: 0.4rem;
+.card-content::-webkit-scrollbar {
+  width: 0.8rem;
   height: 0.4rem;
 }
-pre::-webkit-scrollbar-thumb {
-  border-radius: 4px;
+.card-content::-webkit-scrollbar-thumb {
+  border-radius: 8px;
   background-color: rgba(0, 0, 0, 0.26);
 }
 </style>

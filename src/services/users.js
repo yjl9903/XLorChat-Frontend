@@ -3,6 +3,7 @@ import PubSub from "pubsub-js";
 import api from "./index";
 
 let user = null;
+let once = false;
 
 async function register({ username, password, name, email }) {
   const { data } = await api.post("/user/register", {
@@ -41,8 +42,23 @@ function getUser() {
   return user;
 }
 
+function updateOnce() {
+  once = true;
+}
+function getOnce() {
+  return once;
+}
+
 async function getGroup() {
   const { data } = await api.get("/user/group");
+  return data;
+}
+
+async function createGroup({ members }) {
+  const { data } = await api.post('/user/create', {
+    members
+  });
+  PubSub.publish('createGroup', data);
   return data;
 }
 
@@ -52,7 +68,10 @@ const UserService = {
   logout,
   updateUser,
   getUser,
-  getGroup
+  updateOnce,
+  getOnce,
+  getGroup,
+  createGroup
 };
 
 export default UserService;

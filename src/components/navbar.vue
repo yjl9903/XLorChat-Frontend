@@ -7,7 +7,12 @@
     </template>
     <template slot="end" v-if="isEnd">
       <b-navbar-item v-if="isLogin && background" class="buttons">
-        <b-button rounded type="is-success">创建会话</b-button>
+        <b-navbar-dropdown label="信息">
+          <b-navbar-item>用户 ID : {{uid}}</b-navbar-item>
+          <b-navbar-item>设置</b-navbar-item>
+        </b-navbar-dropdown>
+        <b-button rounded type="is-success" @click="open">创建会话</b-button>
+        <create-group ref="modal"></create-group>
         <b-button @click="logout">退出</b-button>
       </b-navbar-item>
       <b-navbar-item v-else-if="isLogin" class="buttons">
@@ -34,27 +39,42 @@
 <script>
 import PubSub from 'pubsub-js';
 import User from '../services/users';
+import createGroup from './creategroup';
 
 export default {
   name: 'navbar',
+  components: {
+    createGroup
+  },
   data: () => ({
+    uid: 0,
     isEnd: false,
     isLogin: false
   }),
   created() {
-    if (User.getUser()) {
+    if (User.getUser() || User.getOnce()) {
       this.isEnd = true;
       this.isLogin = true;
+      this.uid = User.getUser().uid;
+    } else {
+      PubSub.subscribe('showNavbar', () => (this.isEnd = true));
+      PubSub.subscribe(
+        'login',
+        () => {
+          this.isEnd = true;
+          this.isLogin = true;
+          this.uid = User.getUser().uid;
+        }
+      );
+      PubSub.subscribe(
+        'logout',
+        () => {
+          this.isEnd = true;
+          this.isLogin = false;
+          this.uid = 0;
+        }
+      );
     }
-    PubSub.subscribe('showNavbar', () => (this.isEnd = true));
-    PubSub.subscribe(
-      'login',
-      () => ((this.isEnd = true), (this.isLogin = true))
-    );
-    PubSub.subscribe(
-      'logout',
-      () => ((this.isEnd = true), (this.isLogin = false))
-    );
   },
   methods: {
     async logout() {
@@ -71,6 +91,9 @@ export default {
           this.$router.push('/');
         }
       }
+    },
+    open() {
+      this.$refs.modal.open();
     }
   },
   props: {

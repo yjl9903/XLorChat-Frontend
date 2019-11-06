@@ -57,6 +57,16 @@ export default {
   }),
   methods: {
     async register() {
+      if (this.password !== this.password2) {
+        this.$buefy.snackbar.open({
+          duration: 5000,
+          message: '两次密码不同',
+          type: 'is-danger',
+          position: 'is-top',
+          actionText: '关闭',
+          queue: false
+        });
+      }
       try {
         await User.register(this);
         this.$router.push('/chat');

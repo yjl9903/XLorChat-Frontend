@@ -2,7 +2,7 @@
   <div id="chat" class="container">
     <div class="columns fullheight">
       <div class="column is-3">
-        <b-menu v-if="user">
+        <b-menu>
           <b-menu-list label="会话">
             <b-menu-item
               v-for="(g, id) in userGroup"
@@ -54,7 +54,8 @@ export default {
   methods: {
     async init() {
       this.userGroup = await User.getGroup();
-      this.allws = [];
+      this.allws.splice(0, this.allws.length);
+      this.allmsg.splice(0, this.allmsg.length);
       for (let i = 0; i < this.userGroup.length; i++) {
         this.allws.push(null);
         this.allmsg.push([]);
@@ -62,6 +63,15 @@ export default {
       if (this.userGroup.length > 0) {
         this.connect(this.userGroup[0], 0);
       }
+
+      PubSub.subscribe('createGroup', (msg, data) => {
+        this.userGroup.push(data);
+        this.allws.push(null);
+        this.allmsg.push([]);
+        if (this.userGroup.length === 0) {
+          this.connect(this.userGroup[0], 0);
+        }
+      });
     },
     getGroupName(g) {
       const s = [];
@@ -111,12 +121,6 @@ export default {
 @media screen and (max-width: 1023px) {
   #chat {
     padding: 0 12px;
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  #chat {
-    height: calc(100% - 70px) !important;
   }
 }
 </style>

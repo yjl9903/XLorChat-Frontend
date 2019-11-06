@@ -27,6 +27,7 @@ export default {
     } catch (err) {
       this.user = null;
     } finally {
+      User.updateOnce();
       PubSub.publish('showNavbar');
     }
   }
