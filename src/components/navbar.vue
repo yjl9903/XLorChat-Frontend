@@ -58,7 +58,7 @@ export default {
       this.uid = User.getUser().uid;
     } else if (User.getOnce()) {
       this.isEnd = true;
-    };
+    }
     PubSub.subscribe('showNavbar', () => (this.isEnd = true));
     PubSub.subscribe('login', () => {
       this.isEnd = true;
