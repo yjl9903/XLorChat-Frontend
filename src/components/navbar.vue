@@ -58,19 +58,18 @@ export default {
       this.uid = User.getUser().uid;
     } else if (User.getOnce()) {
       this.isEnd = true;
-    } else {
-      PubSub.subscribe('showNavbar', () => (this.isEnd = true));
-      PubSub.subscribe('login', () => {
-        this.isEnd = true;
-        this.isLogin = true;
-        this.uid = User.getUser().uid;
-      });
-      PubSub.subscribe('logout', () => {
-        this.isEnd = true;
-        this.isLogin = false;
-        this.uid = 0;
-      });
-    }
+    };
+    PubSub.subscribe('showNavbar', () => (this.isEnd = true));
+    PubSub.subscribe('login', () => {
+      this.isEnd = true;
+      this.isLogin = true;
+      this.uid = User.getUser().uid;
+    });
+    PubSub.subscribe('logout', () => {
+      this.isEnd = true;
+      this.isLogin = false;
+      this.uid = 0;
+    });
   },
   methods: {
     async logout() {
