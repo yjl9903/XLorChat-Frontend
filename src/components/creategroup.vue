@@ -2,7 +2,7 @@
   <b-modal :active.sync="isImageModalActive">
     <div class="card">
       <header class="card-header">
-        <h1 class="card-header-title">创建会话 - 您的用户 ID 是 {{uid}}</h1>
+        <h1 class="card-header-title">创建会话 - 您的用户 ID 是 {{ uid }}</h1>
       </header>
       <div class="card-content">
         <div>

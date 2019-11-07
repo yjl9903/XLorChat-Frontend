@@ -95,7 +95,7 @@ export default {
     },
     submit() {
       if (!this.ws) return;
-      if (this.text.length === 0) return ;
+      if (this.text.length === 0) return;
       this.ws.send(this.text);
       this.text = '';
       this.$refs.text.focus();

@@ -8,7 +8,7 @@
     <template slot="end" v-if="isEnd">
       <b-navbar-item v-if="isLogin && background" class="buttons">
         <b-navbar-dropdown label="信息">
-          <b-navbar-item>用户 ID : {{uid}}</b-navbar-item>
+          <b-navbar-item>用户 ID : {{ uid }}</b-navbar-item>
           <b-navbar-item>设置</b-navbar-item>
         </b-navbar-dropdown>
         <b-button rounded type="is-success" @click="open">创建会话</b-button>
@@ -52,28 +52,24 @@ export default {
     isLogin: false
   }),
   created() {
-    if (User.getUser() || User.getOnce()) {
+    if (User.getUser()) {
       this.isEnd = true;
       this.isLogin = true;
       this.uid = User.getUser().uid;
+    } else if (User.getOnce()) {
+      this.isEnd = true;
     } else {
       PubSub.subscribe('showNavbar', () => (this.isEnd = true));
-      PubSub.subscribe(
-        'login',
-        () => {
-          this.isEnd = true;
-          this.isLogin = true;
-          this.uid = User.getUser().uid;
-        }
-      );
-      PubSub.subscribe(
-        'logout',
-        () => {
-          this.isEnd = true;
-          this.isLogin = false;
-          this.uid = 0;
-        }
-      );
+      PubSub.subscribe('login', () => {
+        this.isEnd = true;
+        this.isLogin = true;
+        this.uid = User.getUser().uid;
+      });
+      PubSub.subscribe('logout', () => {
+        this.isEnd = true;
+        this.isLogin = false;
+        this.uid = 0;
+      });
     }
   },
   methods: {
