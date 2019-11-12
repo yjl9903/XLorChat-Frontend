@@ -2,7 +2,9 @@
   <b-modal :active.sync="isImageModalActive">
     <div class="card">
       <header class="card-header">
-        <h1 class="card-header-title">创建会话 - 您的用户 ID 是 {{ uid }}</h1>
+        <h1 class="card-header-title">
+          创建会话 - 您的用户 ID 是 {{ user.uid }}
+        </h1>
       </header>
       <div class="card-content">
         <div>
@@ -24,18 +26,17 @@
 </template>
 
 <script>
-import User from '../services/users';
+import { mapState } from 'vuex';
 
 export default {
   name: 'create-group',
   data: () => ({
     isImageModalActive: false,
-    members: [],
-    uid: 0
+    members: []
   }),
-  created() {
-    this.uid = User.getUser().uid;
-  },
+  computed: mapState({
+    user: state => state.user
+  }),
   methods: {
     open() {
       this.isImageModalActive = true;
@@ -44,7 +45,7 @@ export default {
       try {
         const id = Number(tag);
         if (id <= 0) return false;
-        if (id === this.uid) return false;
+        if (id === this.user.uid) return false;
         return true;
       } catch (err) {
         return false;
@@ -52,7 +53,7 @@ export default {
     },
     async create() {
       try {
-        await User.createGroup(this);
+        this.$store.dispatch('createGroup', this);
         this.isImageModalActive = false;
       } catch (err) {
         this.$buefy.snackbar.open({

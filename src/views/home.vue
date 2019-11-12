@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import User from '../services/users';
+import { mapState } from 'vuex';
 import navbar from '@/components/navbar.vue';
 
 export default {
@@ -31,10 +31,16 @@ export default {
   components: {
     navbar
   },
+  computed: mapState({
+    uid: state => state.user.uid
+  }),
   methods: {
     start() {
-      if (User.getUser()) this.$router.push('chat');
-      else this.$router.push('login');
+      if (this.uid !== null) {
+        this.$router.push('/chat');
+      } else {
+        this.$router.push('/login');
+      }
     }
   }
 };

@@ -35,9 +35,9 @@
 
 <script>
 import ChatCard from '@/components/chatcard.vue';
-import PubSub from 'pubsub-js';
-import User from '../services/users';
+import store from '../store';
 import { wsURL } from '../config';
+import { mapState } from 'vuex';
 
 export default {
   name: 'chat',
@@ -45,34 +45,32 @@ export default {
     ChatCard
   },
   data: () => ({
-    user: null,
-    userGroup: [],
     selected: -1,
     allws: [],
     allmsg: []
   }),
-  methods: {
-    async init() {
-      this.userGroup = await User.getGroup();
-      this.allws.splice(0, this.allws.length);
-      this.allmsg.splice(0, this.allmsg.length);
-      for (let i = 0; i < this.userGroup.length; i++) {
+  computed: mapState({
+    user: state => state.user,
+    userGroup: state => state.group
+  }),
+  watch: {
+    userGroup(nV) {
+      if (nV.length === 0) {
+        this.allws.splice(0, this.allws.length);
+        this.allmsg.splice(0, this.allmsg.length);
+        return;
+      }
+      let flag = this.allws.length;
+      for (let l = flag; l < nV.length; l++) {
         this.allws.push(null);
         this.allmsg.push([]);
       }
-      if (this.userGroup.length > 0) {
+      if (flag) {
         this.connect(this.userGroup[0], 0);
       }
-
-      PubSub.subscribe('createGroup', (msg, data) => {
-        this.userGroup.push(data);
-        this.allws.push(null);
-        this.allmsg.push([]);
-        if (this.userGroup.length === 0) {
-          this.connect(this.userGroup[0], 0);
-        }
-      });
-    },
+    }
+  },
+  methods: {
     getGroupName(g) {
       const s = [];
       for (const user of g.members) {
@@ -92,19 +90,23 @@ export default {
       });
     }
   },
-  created() {
-    const user = User.getUser();
-    if (user) {
-      this.user = user;
-      this.init();
+  async created() {
+    try {
+      await this.$store.dispatch('getGroup');
+    } catch (error) {}
+
+    this.allws.splice(0, this.allws.length);
+    this.allmsg.splice(0, this.allmsg.length);
+    for (let i = 0; i < this.userGroup.length; i++) {
+      this.allws.push(null);
+      this.allmsg.push([]);
     }
-    PubSub.subscribe('login', (msg, data) => {
-      this.user = data;
-      this.init();
-    });
+    if (this.userGroup.length > 0) {
+      this.connect(this.userGroup[0], 0);
+    }
   },
   beforeRouteEnter(to, from, next) {
-    if (User.getUser()) {
+    if (store.getters.isLogin) {
       next();
     } else {
       next('/');

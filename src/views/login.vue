@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import User from '../services/users';
+import store from '../store';
 
 export default {
   name: 'chat-login',
@@ -44,7 +44,10 @@ export default {
   methods: {
     async login() {
       try {
-        await User.login(this);
+        await this.$store.dispatch('login', {
+          username: this.username,
+          password: this.password
+        });
         this.$router.push('/chat');
       } catch (err) {
         this.$buefy.snackbar.open({
@@ -56,6 +59,13 @@ export default {
           queue: false
         });
       }
+    }
+  },
+  beforeRouteEnter(to, from, next) {
+    if (store.getters.isLogin) {
+      next('/chat');
+    } else {
+      next();
     }
   }
 };

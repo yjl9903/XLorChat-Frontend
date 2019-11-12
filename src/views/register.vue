@@ -44,8 +44,6 @@
 </template>
 
 <script>
-import User from '../services/users';
-
 export default {
   name: 'register',
   data: () => ({
@@ -68,7 +66,12 @@ export default {
         });
       }
       try {
-        await User.register(this);
+        await this.$store.dispatch('register', {
+          username: this.username,
+          password: this.password,
+          name: this.name,
+          email: this.email
+        });
         this.$router.push('/chat');
       } catch (err) {
         this.$buefy.snackbar.open({

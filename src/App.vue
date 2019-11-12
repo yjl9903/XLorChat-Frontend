@@ -8,28 +8,22 @@
 </template>
 
 <script>
-import PubSub from 'pubsub-js';
-
+import { mapState } from 'vuex';
 import navbar from '@/components/navbar.vue';
-import User from './services/users';
 
 export default {
   name: 'app',
   components: {
     navbar
   },
-  data: () => ({
-    user: null
+  data: () => ({}),
+  computed: mapState({
+    user: state => state.user
   }),
   async created() {
     try {
-      this.user = await User.updateUser();
-    } catch (err) {
-      this.user = null;
-    } finally {
-      User.updateOnce();
-      PubSub.publish('showNavbar');
-    }
+      await this.$store.dispatch('getInfo');
+    } catch (err) {}
   }
 };
 </script>

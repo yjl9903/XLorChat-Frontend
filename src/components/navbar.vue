@@ -5,10 +5,11 @@
         <p class="title">Chat</p>
       </b-navbar-item>
     </template>
-    <template slot="end" v-if="isEnd">
+    <template slot="end">
       <b-navbar-item v-if="isLogin && background" class="buttons">
         <b-navbar-dropdown label="信息">
           <b-navbar-item>用户 ID : {{ uid }}</b-navbar-item>
+          <b-navbar-item>用户昵称 : {{ user.name }}</b-navbar-item>
           <b-navbar-item>设置</b-navbar-item>
         </b-navbar-dropdown>
         <b-button rounded type="is-success" @click="open">创建会话</b-button>
@@ -37,8 +38,7 @@
 </template>
 
 <script>
-import PubSub from 'pubsub-js';
-import User from '../services/users';
+import { mapState } from 'vuex';
 import createGroup from './creategroup';
 
 export default {
@@ -46,34 +46,15 @@ export default {
   components: {
     createGroup
   },
-  data: () => ({
-    uid: 0,
-    isEnd: false,
-    isLogin: false
+  data: () => ({}),
+  computed: mapState({
+    user: state => state.user,
+    uid: state => state.user.uid,
+    isLogin: state => !!state.user.uid
   }),
-  created() {
-    if (User.getUser()) {
-      this.isEnd = true;
-      this.isLogin = true;
-      this.uid = User.getUser().uid;
-    } else if (User.getOnce()) {
-      this.isEnd = true;
-    }
-    PubSub.subscribe('showNavbar', () => (this.isEnd = true));
-    PubSub.subscribe('login', () => {
-      this.isEnd = true;
-      this.isLogin = true;
-      this.uid = User.getUser().uid;
-    });
-    PubSub.subscribe('logout', () => {
-      this.isEnd = true;
-      this.isLogin = false;
-      this.uid = 0;
-    });
-  },
   methods: {
     async logout() {
-      await User.logout();
+      await this.$store.dispatch('logout');
       this.$router.push('/');
     },
     start() {
