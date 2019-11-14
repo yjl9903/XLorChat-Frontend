@@ -70,6 +70,7 @@ export default new Vuex.Store({
     },
     async getGroup({ commit }) {
       const { data } = await api.get('/user/group');
+      commit(ClearGroup);
       commit(PushGroup, data);
     },
     async createGroup({ commit }, { members }) {

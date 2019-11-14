@@ -1,8 +1,8 @@
 <template>
   <div id="chat" class="container">
     <div class="columns fullheight">
-      <div class="column is-3">
-        <b-menu>
+      <div class="column is-3 fullheight">
+        <b-menu style="overflow: auto">
           <b-menu-list label="会话">
             <b-menu-item
               v-for="(g, id) in userGroup"
