@@ -21,9 +21,7 @@ export default {
     user: state => state.user
   }),
   async created() {
-    try {
-      await this.$store.dispatch('getInfo');
-    } catch (err) {}
+    await this.$store.dispatch('getInfo');
   }
 };
 </script>

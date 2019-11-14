@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import createPersistedState from "vuex-persistedstate";
 import axios from 'axios';
+
 import { baseURL } from '../config';
 
 const api = axios.create({
@@ -18,6 +20,7 @@ export const PushGroup = 'pushGroup';
 export const ClearGroup = 'clearGroup';
 
 export default new Vuex.Store({
+  plugins: [createPersistedState()],
   state: {
     user: {
       uid: null,
@@ -44,8 +47,13 @@ export default new Vuex.Store({
   },
   actions: {
     async getInfo({ commit }) {
-      const { data } = await api.get('/user');
-      commit(UpdateUser, data);
+      try {
+        const { data } = await api.get('/user');
+        commit(UpdateUser, data);
+      } catch(err) {
+        commit(UpdateUser, {});
+        commit(ClearGroup);
+      }
     },
     async register({ commit }, form) {
       const { data } = await api.post('/user/register', form);
