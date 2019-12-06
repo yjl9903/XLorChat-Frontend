@@ -1,7 +1,13 @@
 <template>
   <p class="bubble" :class="[self ? 'has-text-right' : 'has-text-left']">
     <i :class="self ? 'bubble-right' : 'bubble-left'"></i>
-    <span>{{ message.message }}</span>
+    <span v-if="message.message.text">{{ message.message.text }}</span>
+    <canvas
+      v-else
+      ref="cvs"
+      :width="width"
+      :height="height"
+    ></canvas>
   </p>
 </template>
 
@@ -12,7 +18,28 @@ export default {
     message: Object,
     self: Boolean
   },
-  data: () => ({})
+  data: () => ({
+    height: 260,
+    width: 300
+  }),
+  mounted() {
+    if (this.message.message.image) {
+      const image = new Image();
+      image.src = this.message.message.image;
+      image.onload = () => {
+        const ctx = this.$refs.cvs.getContext('2d');
+        ctx.drawImage(image, 0, 0);
+
+        const scale = this.height / image.height;
+        ctx.clearRect(0, 0, this.width, this.height);
+        ctx.save();
+        ctx.translate(this.width / 2 - image.width / 2 * scale, this.height / 2 - image.height / 2 * scale);
+        ctx.scale(scale, scale);
+        ctx.drawImage(image, 0, 0);
+        ctx.restore();
+      };
+    }
+  }
 };
 </script>
 
@@ -21,7 +48,8 @@ export default {
   position: relative;
   margin-bottom: 10px;
 }
-.bubble > span {
+.bubble > span,
+.bubble > canvas {
   display: inline-block;
   background: #ddd;
   padding: 10px;

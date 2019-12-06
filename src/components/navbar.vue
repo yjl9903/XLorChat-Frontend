@@ -1,20 +1,27 @@
 <template>
-  <b-navbar wrapper-class="container" transparent :shadow="!!background">
+  <b-navbar
+    wrapper-class="container"
+    transparent
+    :shadow="!!background"
+    :close-on-click="false"
+  >
     <template slot="brand">
       <b-navbar-item @click="start">
         <p class="title">Chat</p>
       </b-navbar-item>
     </template>
     <template slot="end">
-      <b-navbar-item v-if="isLogin && background" class="buttons">
+      <b-navbar-item v-if="isLogin && background">
         <b-navbar-dropdown label="信息">
           <b-navbar-item>用户 ID : {{ uid }}</b-navbar-item>
           <b-navbar-item>用户昵称 : {{ user.name }}</b-navbar-item>
           <b-navbar-item>设置</b-navbar-item>
         </b-navbar-dropdown>
-        <b-button rounded type="is-success" @click="open">创建会话</b-button>
-        <create-group ref="modal"></create-group>
-        <b-button @click="logout">退出</b-button>
+        <div class="buttons">
+          <b-button rounded type="is-success" @click="open">创建会话</b-button>
+          <create-group ref="modal"></create-group>
+          <b-button @click="logout">退出</b-button>
+        </div>
       </b-navbar-item>
       <b-navbar-item v-else-if="isLogin" class="buttons">
         <b-button type="is-light" outlined @click="logout">退出</b-button>

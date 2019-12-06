@@ -27,9 +27,19 @@
             </b-field>
           </div>
           <div class="column has-text-right" style="padding-top: 0">
-            <b-button size="is-small" type="is-success" @click="submit"
-              >发送</b-button
+            <b-upload size="is-small" v-model="file" style="float: left">
+              <a class="button is-primary">
+                <span>图片</span>
+              </a>
+            </b-upload>
+            <span
+              class="file-name is-inline-block"
+              v-if="file"
+              style="float: left;"
             >
+              {{ file.name }}
+            </span>
+            <b-button type="is-success" @click="submit">发送</b-button>
           </div>
         </div>
       </div>
@@ -39,6 +49,7 @@
 
 <script>
 import bubble from './bubble';
+import { fileToBase64 } from '../util';
 
 export default {
   name: 'chat-card',
@@ -51,6 +62,7 @@ export default {
     messages: Array
   },
   data: () => ({
+    file: null,
     height: {
       height: '0px',
       overflowX: 'hidden',
@@ -86,6 +98,7 @@ export default {
       this.openHandle = () => {};
       this.messageHandle = ({ data }) => {
         data = JSON.parse(data);
+        data.message = JSON.parse(data.message);
         this.messages.push(data);
       };
       this.closeHandle = () => {};
@@ -93,11 +106,28 @@ export default {
       ws.addEventListener('message', this.messageHandle);
       ws.addEventListener('close', this.closeHandle);
     },
-    submit() {
+    async submit() {
       if (!this.ws) return;
-      if (this.text.length === 0) return;
-      this.ws.send(this.text);
-      this.text = '';
+      if (this.file) {
+        const msg = {
+          image: await fileToBase64(this.file, text => {
+            this.$buefy.snackbar.open({
+              duration: 5000,
+              message: text,
+              type: 'is-danger',
+              position: 'is-top',
+              actionText: '关闭',
+              queue: false
+            });
+          })
+        };
+        this.ws.send(JSON.stringify(msg));
+        this.file = null;
+      } else if (this.text.length !== 0) {
+        const msg = { text: this.text };
+        this.ws.send(JSON.stringify(msg));
+        this.text = '';
+      }
       this.$refs.text.focus();
     }
   },

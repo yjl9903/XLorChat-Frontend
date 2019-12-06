@@ -117,7 +117,7 @@ export default {
 
 <style>
 #chat {
-  height: calc(100% - 64px) !important;
+  height: calc(100% - 68px) !important;
 }
 
 @media screen and (max-width: 1023px) {
