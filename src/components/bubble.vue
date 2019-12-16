@@ -1,27 +1,42 @@
 <template>
-  <p class="bubble" :class="[self ? 'has-text-right' : 'has-text-left']">
-    <i :class="self ? 'bubble-right' : 'bubble-left'"></i>
-    <span v-if="message.message.text">{{ message.message.text }}</span>
-    <canvas
-      v-else
-      ref="cvs"
-      :width="width"
-      :height="height"
-    ></canvas>
-  </p>
+  <div style="position: relative">
+    <p v-if="group" :class="['name', self ? 'has-text-right' : 'has-text-left']">{{ message.user.name }}</p>
+    <img v-if="!self" class="avatar" :src="gravatarUrl">
+    <div :class="self ? 'main-bubble-right' : 'main-bubble-left'">
+      <p class="bubble" :class="[self ? 'has-text-right' : 'has-text-left']">
+        <i :class="self ? 'bubble-right' : 'bubble-left'"></i>
+        <span v-if="message.message.text">{{ message.message.text }}</span>
+        <canvas
+          v-else
+          ref="cvs"
+          :width="width"
+          :height="height"
+        ></canvas>
+      </p>
+    </div>
+    <img v-if="self" class="avatar" :src="gravatarUrl">
+  </div>
 </template>
 
 <script>
+import gravatar from 'gravatar';
+
 export default {
   name: 'bubble',
   props: {
     message: Object,
-    self: Boolean
+    self: Boolean,
+    group: Boolean
   },
   data: () => ({
     height: 260,
     width: 300
   }),
+  computed: {
+    gravatarUrl() {
+      return gravatar.url(this.message.user.email);
+    }
+  },
   mounted() {
     if (this.message.message.image) {
       const image = new Image();
@@ -44,6 +59,17 @@ export default {
 </script>
 
 <style>
+.main-bubble-right {
+  width: calc(100% - 50px);
+  margin-right: 20px;
+  display: inline-block;
+}
+.main-bubble-left {
+  width: calc(100% - 50px);
+  margin-left: 20px;
+  display: inline-block;
+}
+
 .bubble {
   position: relative;
   margin-bottom: 10px;
@@ -66,7 +92,7 @@ export default {
   border-style: solid;
   border-color: transparent transparent transparent currentcolor;
   left: 100%;
-  top: calc(1em);
+  top: 0.7em;
 }
 .bubble > .bubble-left {
   position: absolute;
@@ -77,6 +103,18 @@ export default {
   border-style: solid;
   border-color: transparent currentcolor transparent transparent;
   right: 100%;
-  top: calc(1em);
+  top: 0.7em;
+}
+
+.name {
+  font-size: 0.8em;
+}
+
+.avatar {
+  position: absolute;
+  margin-top: 0.5em;
+  border-radius: 50%;
+  max-width: 30px;
+  max-height: 30px;
 }
 </style>

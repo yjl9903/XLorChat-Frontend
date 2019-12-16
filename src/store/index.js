@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import createPersistedState from "vuex-persistedstate";
 import axios from 'axios';
+import router from '../router';
 
 import { baseURL } from '../config';
 
@@ -53,6 +54,7 @@ export default new Vuex.Store({
       } catch(err) {
         commit(UpdateUser, {});
         commit(ClearGroup);
+        router.push('/');
       }
     },
     async register({ commit }, form) {

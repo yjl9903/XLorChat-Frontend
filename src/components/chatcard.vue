@@ -10,6 +10,7 @@
         :key="id"
         :message="item"
         :self="item.user.uid === user.uid"
+        :group="group.members.length > 2"
       ></bubble>
     </div>
 
