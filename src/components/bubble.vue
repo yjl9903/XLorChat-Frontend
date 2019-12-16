@@ -66,7 +66,7 @@ export default {
 }
 .main-bubble-left {
   width: calc(100% - 50px);
-  margin-left: 20px;
+  margin-left: 50px;
   display: inline-block;
 }
 
