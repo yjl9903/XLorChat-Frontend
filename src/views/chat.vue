@@ -1,6 +1,6 @@
 <template>
   <div id="chat" class="container">
-    <div class="columns fullheight">
+    <div class="columns full-height">
       <div class="column is-3 fullheight">
         <b-menu style="overflow: auto">
           <b-menu-list label="会话">
@@ -9,17 +9,12 @@
               :key="id"
               :active="id === 0"
               :label="getGroupName(g)"
-              @click="
-                connect(
-                  g,
-                  id
-                )
-              "
+              @click="connect(g, id)"
             ></b-menu-item>
           </b-menu-list>
         </b-menu>
       </div>
-      <div class="column is-9 fullheight">
+      <div class="column is-9 full-height">
         <chat-card
           v-if="selected !== -1"
           ref="card"
@@ -123,6 +118,10 @@ export default {
 @media screen and (max-width: 1023px) {
   #chat {
     padding: 0 12px;
+  }
+
+  #chat .fullheight {
+    height: initial;
   }
 }
 </style>

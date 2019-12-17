@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import createPersistedState from "vuex-persistedstate";
 import axios from 'axios';
 import router from '../router';
+import { cloneDeep } from 'lodash';
 
 import { baseURL } from '../config';
 
@@ -19,6 +20,8 @@ Vue.use(Vuex);
 export const UpdateUser = 'updateUser';
 export const PushGroup = 'pushGroup';
 export const ClearGroup = 'clearGroup';
+export const PushMessage = 'pushMessage';
+export const ClearMessage = 'clearMessage';
 
 export default new Vuex.Store({
   plugins: [createPersistedState()],
@@ -28,10 +31,25 @@ export default new Vuex.Store({
       name: '',
       email: ''
     },
-    group: []
+    group: [],
+    message: []
   },
   getters: {
-    isLogin: state => !!state.user.uid
+    isLogin: state => !!state.user.uid,
+    msgHistory: state => g => {
+      let i = 0;
+      for (const { gid } of state.group) {
+        if (g === gid) {
+          const arr = [];
+          for (const item of state.message[i]) {
+            arr.push(cloneDeep(item));
+          }
+          return arr;
+        }
+        i++;
+      }
+      return [];
+    }
   },
   mutations: {
     [UpdateUser](state, { uid = null, name = '', email = '' }) {
@@ -40,10 +58,40 @@ export default new Vuex.Store({
       state.user.email = email;
     },
     [PushGroup](state, arr) {
-      for (const g of arr) state.group.push(g);
+      const gidSet = new Set();
+      for (const { gid } of state.group) {
+        gidSet.add(gid);
+      }
+      for (const g of arr) { 
+        if (gidSet.has(g.gid)) continue;
+        state.group.push(g);
+        state.message.push([]);
+        gidSet.add(g.gid);
+      }
     },
     [ClearGroup](state) {
       state.group.splice(0, state.group.length);
+      state.message.splice(0, state.message.length);
+    },
+    [PushMessage](state, { gid, data }) {
+      let i = 0;
+      for (const item of state.group) {
+        if (gid == item.gid) {
+          state.message[i].push(data);
+          break;
+        }
+        i++;
+      }
+    },
+    [ClearMessage](state, gid) {
+      let i = 0;
+      for (const item of state.group) {
+        if (gid == item.gid) {
+          state.message[i].splice(0, state.message[i].length);
+          break;
+        }
+        i++;
+      }
     }
   },
   actions: {
@@ -72,7 +120,6 @@ export default new Vuex.Store({
     },
     async getGroup({ commit }) {
       const { data } = await api.get('/user/group');
-      commit(ClearGroup);
       commit(PushGroup, data);
     },
     async createGroup({ commit }, { members }) {

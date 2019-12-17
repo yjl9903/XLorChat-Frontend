@@ -37,6 +37,10 @@ html {
   height: 100%;
 }
 
+.full-height {
+  height: 100%;
+}
+
 .fullwidth {
   width: 100%;
 }

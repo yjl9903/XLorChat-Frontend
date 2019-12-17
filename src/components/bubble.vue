@@ -1,20 +1,20 @@
 <template>
   <div style="position: relative">
-    <p v-if="group" :class="['name', self ? 'has-text-right' : 'has-text-left']">{{ message.user.name }}</p>
-    <img v-if="!self" class="avatar" :src="gravatarUrl">
+    <p
+      v-if="group"
+      :class="['name', self ? 'has-text-right' : 'has-text-left']"
+    >
+      {{ message.user.name }}
+    </p>
+    <img v-if="!self" class="avatar" :src="gravatarUrl" />
     <div :class="self ? 'main-bubble-right' : 'main-bubble-left'">
       <p class="bubble" :class="[self ? 'has-text-right' : 'has-text-left']">
         <i :class="self ? 'bubble-right' : 'bubble-left'"></i>
         <span v-if="message.message.text">{{ message.message.text }}</span>
-        <canvas
-          v-else
-          ref="cvs"
-          :width="width"
-          :height="height"
-        ></canvas>
+        <canvas v-else ref="cvs" :width="width" :height="height"></canvas>
       </p>
     </div>
-    <img v-if="self" class="avatar" :src="gravatarUrl">
+    <img v-if="self" class="avatar" :src="gravatarUrl" />
   </div>
 </template>
 
@@ -48,7 +48,10 @@ export default {
         const scale = this.height / image.height;
         ctx.clearRect(0, 0, this.width, this.height);
         ctx.save();
-        ctx.translate(this.width / 2 - image.width / 2 * scale, this.height / 2 - image.height / 2 * scale);
+        ctx.translate(
+          this.width / 2 - (image.width / 2) * scale,
+          this.height / 2 - (image.height / 2) * scale
+        );
         ctx.scale(scale, scale);
         ctx.drawImage(image, 0, 0);
         ctx.restore();

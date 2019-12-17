@@ -2,6 +2,11 @@
   <div class="card fullheight">
     <header class="card-header" ref="header">
       <h1 class="card-header-title">{{ name }}</h1>
+      <div class="card-header-icon" @click="clearMsg">
+        <b-tooltip label="清空聊天记录" position="is-left">
+          <b-icon icon="delete"></b-icon>
+        </b-tooltip>
+      </div>
     </header>
 
     <div class="card-content" :style="height" v-chat-scroll>
@@ -38,7 +43,12 @@
               v-if="file"
               style="float: left;"
             >
-              {{ file.name }}
+              {{ file.name.substr(0, 15) }}
+              <b-icon
+                icon="close"
+                style="cursor: pointer"
+                @click.native="cancelImage"
+              ></b-icon>
             </span>
             <b-button type="is-success" @click="submit">发送</b-button>
           </div>
@@ -81,7 +91,11 @@ export default {
       const aH = this._vnode.elm.offsetHeight;
       const hH = this.$refs.header.offsetHeight;
       const fH = this.$refs.footer.offsetHeight;
-      this.height.height = `${aH - hH - fH}px`;
+      if (document.body.clientWidth < 1024) {
+        this.height.height = `${aH}px`;
+      } else {
+        this.height.height = `${aH - hH - fH}px`;
+      }
     },
     connect(group, ws) {
       this.calHeight();
@@ -96,11 +110,19 @@ export default {
       this.group = group;
       this.ws = ws;
 
+      if (this.messages.length === 0) {
+        const data = this.$store.getters.msgHistory(group.gid);
+        for (const item of data) {
+          this.messages.push(item);
+        }
+      }
+
       this.openHandle = () => {};
       this.messageHandle = ({ data }) => {
         data = JSON.parse(data);
         data.message = JSON.parse(data.message);
         this.messages.push(data);
+        this.$store.commit('pushMessage', { gid: this.group.gid, data });
       };
       this.closeHandle = () => {};
       ws.addEventListener('open', this.openHandle);
@@ -130,6 +152,18 @@ export default {
         this.text = '';
       }
       this.$refs.text.focus();
+    },
+    cancelImage() {
+      this.file = null;
+    },
+    clearMsg() {
+      this.$buefy.dialog.confirm({
+        message: '确认清楚聊天记录？',
+        onConfirm: () => {
+          this.messages.splice(0, this.messages.length);
+          this.$store.commit('clearMessage', this.group.gid);
+        }
+      });
     }
   },
   mounted() {
