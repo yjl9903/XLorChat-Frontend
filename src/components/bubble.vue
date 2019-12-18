@@ -29,8 +29,8 @@ export default {
     group: Boolean
   },
   data: () => ({
-    height: 260,
-    width: 300
+    height: 240,
+    width: 240
   }),
   computed: {
     gravatarUrl() {
